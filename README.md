@@ -1,11 +1,10 @@
 Package: alinex-worktime
 =================================================
 
-[![Build Status] (https://travis-ci.org/alinex/node-worktime.svg?branch=master)](https://travis-ci.org/alinex/node-worktime) 
-[![Coverage Status] (https://coveralls.io/repos/alinex/node-worktime/badge.png?branch=master)](https://coveralls.io/r/alinex/node-worktime?branch=master)
+[![Build Status] (https://travis-ci.org/alinex/node-worktime.svg?branch=master)](https://travis-ci.org/alinex/node-worktime)
 [![Dependency Status] (https://gemnasium.com/alinex/node-worktime.png)](https://gemnasium.com/alinex/node-worktime)
 
-Description comes here...
+This tool will help to log worktimes for different tasks.
 
 
 Install

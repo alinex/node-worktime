@@ -1,10 +1,14 @@
 {
   "name": "alinex-worktime",
   "version": "0.0.0",
-  "description": "",
+  "description": "Command line tool for logging worktimes.",
   "copyright": "Alexander Schilling 2015",
   "private": false,
-  "keywords": [],
+  "keywords": [
+    "logging",
+    "times",
+    "support"
+  ],
   "homepage": "http://alinex.github.io/node-worktime/",
   "repository": {
     "type": "git",
@@ -18,17 +22,30 @@
   },
   "contributors": [],
   "license": "Apache-2.0",
-  "main": "./lib/index.js",
+  "bin": {
+    "worktime": "./bin/worktime"
+  },
+  "man": "./man/worktime.1",
   "scripts": {
-    "prepublish": "node_modules/.bin/alinex-make -c compile",
-    "test": "node_modules/.bin/alinex-make -c test"
+    "prepublish": "node_modules/.bin/builder -c compile",
+    "test": "node_modules/.bin/builder -c test",
+    "start": "node lib/cli"
   },
   "directories": {
-    "lib": "./lib"
+    "bin": "./bin",
+    "lib": "./lib",
+    "man": "./man"
   },
-  "dependencies": {},
+  "dependencies": {
+    "alinex-error": "^0.2.7",
+    "alinex-fs": "^0.2.1",
+    "chalk": "^1.0.0",
+    "prompt": "^0.2.14",
+    "yargs": "3.x"
+  },
   "devDependencies": {
-    "alinex-make": "0.4.x"
+    "alinex-builder": "1.x",
+    "chai": "2.x"
   },
   "optionalDependencies": {},
   "engines": {
