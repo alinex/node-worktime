@@ -71,9 +71,9 @@ log = (task, desc, cb) ->
   dir = path.join __dirname, '../var/local/data'
   time = (new Date).toISOString()[0..15].replace /T/, ' '
   date = time[0..9]
-  console.log "LOG #{time} #{task} #{desc}"
   fs.mkdirs dir, ->
-    fs.appendFile path.join(dir, "#{date}.log"), "#{time} #{task} #{desc}", cb
+    msg = if task then "#{time} #{task} #{desc}\n" else "#{time}\n"
+    fs.appendFile path.join(dir, "#{date}.log"), msg, cb
 
 # Run
 # -------------------------------------------------
