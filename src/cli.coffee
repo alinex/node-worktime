@@ -30,6 +30,7 @@ yargs = require 'yargs'
 path = require 'path'
 chalk = require 'chalk'
 prompt = require 'prompt'
+moment = require 'moment'
 # include alinex modules
 fs = require 'alinex-fs'
 errorHandler = require 'alinex-error'
@@ -67,13 +68,31 @@ argv = yargs
 
 # Helper
 # -------------------------------------------------
-log = (task, desc, cb) ->
-  time = (new Date).toISOString()[0..15].replace /T/, ' '
+addlog = (task, desc, cb) ->
+  # get logfile
+  time = moment()
   dir = path.join __dirname, '../var/local/data'
-  file = path.join dir, "#{time[0..6]}.log"
-  fs.mkdirs dir, ->
-    msg = if task then "#{time} #{task} #{desc}\n" else "#{time}\n"
-    fs.appendFile file, msg, cb
+  file = path.join dir, "#{time.format 'YYYY-MM'}.log"
+  # output last log
+  lastlog time, dir, file, ->
+    # write new log
+    fs.mkdirs dir, ->
+      msg = if task then "#{time.format()} #{task} #{desc}\n" else "#{time.format()}\n"
+      fs.appendFile file, msg, cb
+
+lastlog = (time, dir, file, cb) ->
+  fs.readFile file, 'utf-8', (err, text) ->
+    return if err
+    lines = text.trim().split /\n/
+    values = lines[lines.length-1].split /\ /
+    # only go on if no end log
+    return cb() unless values.length > 2
+    stime = moment values[0]
+    diff = time.diff stime, 'minutes'
+    task = values[1]
+    desc = values[2..].join ' '
+    console.log "You worked on #{task} for #{diff} minutes (#{desc})."
+    cb()
 
 # Run
 # -------------------------------------------------
@@ -82,11 +101,10 @@ if argv.list
 else if argv.report
   console.log 'REPORT'
 else unless argv._?[0]
-  log()
+  addlog()
 else
   task = argv._[0]
   # ask for details
-  console.log 'LOG'
   prompt.start()
   prompt.get
     properties:
@@ -95,5 +113,5 @@ else
         validator: /.{5,}/,
   , (err, input) ->
     throw err if err
-    log task, input.detail, (err) ->
+    addlog task, input.detail, (err) ->
       throw err if err
