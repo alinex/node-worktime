@@ -68,12 +68,12 @@ argv = yargs
 # Helper
 # -------------------------------------------------
 log = (task, desc, cb) ->
-  dir = path.join __dirname, '../var/local/data'
   time = (new Date).toISOString()[0..15].replace /T/, ' '
-  date = time[0..9]
+  dir = path.join __dirname, '../var/local/data'
+  file = path.join dir, "#{time[0..6]}.log"
   fs.mkdirs dir, ->
     msg = if task then "#{time} #{task} #{desc}\n" else "#{time}\n"
-    fs.appendFile path.join(dir, "#{date}.log"), msg, cb
+    fs.appendFile file, msg, cb
 
 # Run
 # -------------------------------------------------
