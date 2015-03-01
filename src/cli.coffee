@@ -68,7 +68,7 @@ argv = yargs
 
 # Helper
 # -------------------------------------------------
-addlog = (task, desc, cb) ->
+addlog = (task, desc, cb = ->) ->
   # get logfile
   time = moment()
   dir = path.join __dirname, '../var/local/data'
@@ -78,7 +78,13 @@ addlog = (task, desc, cb) ->
     # write new log
     fs.mkdirs dir, ->
       msg = if task then "#{time.format()} #{task} #{desc}\n" else "#{time.format()}\n"
-      fs.appendFile file, msg, cb
+      fs.appendFile file, msg, (err) ->
+        return cb err if err
+        if task
+          console.log "Your new task was logged."
+        else
+          console.log "Logged a stop of last task."
+        cb()
 
 lastlog = (time, dir, file, cb) ->
   fs.readFile file, 'utf-8', (err, text) ->
@@ -91,7 +97,7 @@ lastlog = (time, dir, file, cb) ->
     diff = time.diff stime, 'minutes'
     task = values[1]
     desc = values[2..].join ' '
-    console.log "You worked on #{task} for #{diff} minutes (#{desc})."
+    console.log chalk.yellow "You worked on #{task} for #{diff} minutes (#{desc})."
     cb()
 
 # Run
