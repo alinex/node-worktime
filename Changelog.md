@@ -4,6 +4,11 @@ Version changes
 The following list gives a short overview about what is changed between
 individual versions:
 
+Version 0.0.2 (2015-03-02)
+-------------------------------------------------
+- updated documentation and report display
+- Updated documentation.
+
 Version 0.0.1 (2015-03-02)
 -------------------------------------------------
 - Added summary report.
