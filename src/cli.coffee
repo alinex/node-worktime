@@ -54,10 +54,11 @@ argv = yargs
 .usage("""
   Utility to log work times on different projects.
 
-  Usage: $0 task
+  Usage: $0 [task] [comment]
+  .      $0 -r <report name> -d <date>
   """)
 # examples
-.example('$0 t1212', 'to log the start on working on ticket 1212')
+.example('$0 t-1212', 'to log the start on working on ticket 1212')
 .example('$0', 'to end working on the previous task')
 .example('$0 -r summary -d 2015-03', 'to get a summary report for the given date')
 # report options
@@ -183,12 +184,13 @@ group = (logs) ->
       diff = Math.ceil moment(log.time).diff last.time, 'minutes', true
       day = last.time[0..9]
       data[day] ?= {}
-      data[day][last.name] ?=
-        group: last.group
+      data[day][last.group[0]] ?= {}
+      data[day][last.group[0]][last.group[1] ? '-'] ?=
         time: 0
-        comment: ''
-      data[day][last.name].time += diff
-      data[day][last.name].comment += "#{last.desc}\n"
+        comment: []
+      entry = data[day][last.group[0]][last.group[1]]
+      entry.time += diff
+      entry.comment.push last.desc unless last.desc in entry.comment
     # keep for next line
     last = if log.name? then log else null
   data
@@ -199,14 +201,14 @@ report =
   # ### list
   # Chronological list of tasks which were done
   list: (logs, cb) ->
-    console.log 'DATE\tSTART\tEND\tMINUTES\tGROUP\tTASK'
+    console.log 'DATE\tSTART\tEND\tMINUTES\tGROUP\tTASK\tCOMMENT'
     last = null
     for log in logs
       # calculate previous line
       if last
         diff = Math.ceil moment(log.time).diff last.time, 'minutes', true
         console.log "#{last.time[0..9]}\t#{last.time[11..15]}\t#{log.time[11..15]}\t\
-        #{diff}\t#{last.group[0]}\t#{last.group[1]}: #{last.desc}"
+        #{diff}\t#{last.group[0]}\t#{last.group[1]}\t#{last.desc}"
       # keep for next line
       last = if log.name? then log else null
     cb()
@@ -214,9 +216,10 @@ report =
   # calculation of each task per day
   summary: (logs, cb) ->
     console.log "DAY\tMINUTES\tGROUP\tTASK"
-    for day,entry of group logs
-      for name,task of entry
-        console.log "#{day}\t#{task.time}\t#{task.group[0]}\t#{task.group[1]}"
+    for day,data of group logs
+      for category of data
+        for task,entry of data[category]
+          console.log "#{day}\t#{entry.time}\t#{category}\t#{task}"
     cb()
 
 # Start the processing

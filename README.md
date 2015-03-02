@@ -24,6 +24,27 @@ After global installation you may directly call `worktime` from anywhere.
 Usage
 -------------------------------------------------
 
+    Usage: `worktime [task] [comment]`
+           `worktime -r <report-name> -d <date>`
+
+    Options:
+      -r, --report  show summary report in given format
+      -d, --date    select date for list or report using yyyy, yyyy-mm or yyyy-mm-dd
+
+      -h, --help    Show help
+
+
+Examples:
+-------------------------------------------------
+
+    worktime t-1212                    to log the start on working on
+                                             ticket 1212
+  node bin/worktime                          to end working on the previous task
+
+  node bin/worktime -r summary -d 2015-03    to get a summary report for the
+                                             given date
+
+
 
 License
 -------------------------------------------------
