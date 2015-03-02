@@ -4,13 +4,25 @@ Package: alinex-worktime
 [![Build Status] (https://travis-ci.org/alinex/node-worktime.svg?branch=master)](https://travis-ci.org/alinex/node-worktime)
 [![Dependency Status] (https://gemnasium.com/alinex/node-worktime.png)](https://gemnasium.com/alinex/node-worktime)
 
-This tool will help to log worktimes for different tasks.
+This tool will help to log work-times for different tasks.
 
 
 Install
 -------------------------------------------------
 
+Install the package globally using npm:
+
+    > sudo npm install -g alinex-worktime --production
+
+After global installation you may directly call `worktime` from anywhere.
+
+    > worktime --help
+
 [![NPM](https://nodei.co/npm/alinex-worktime.png?downloads=true&stars=true)](https://nodei.co/npm/alinex-worktime/)
+
+
+Usage
+-------------------------------------------------
 
 
 License

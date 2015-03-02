@@ -39,6 +39,15 @@ errorHandler = require 'alinex-error'
 errorHandler.install()
 
 
+# Configuration of shortcut groups
+# -------------------------------------------------
+groups =
+  a: 'allgemein'
+  b: 'betrieb'
+  e: 'entwicklung'
+  t: 'ticket'
+  j: 'jira'
+
 # Start argument parsing
 # -------------------------------------------------
 argv = yargs
@@ -50,15 +59,11 @@ argv = yargs
 # examples
 .example('$0 t1212', 'to log the start on working on ticket 1212')
 .example('$0', 'to end working on the previous task')
-.example('$0 -l', 'to list the collected times')
-# general options
-.boolean('l')
-.alias('l', 'list')
-.describe('l', 'list log times')
+.example('$0 -r summary -d 2015-03', 'to get a summary report for the given date')
+# report options
 .string('r')
 .alias('r', 'report')
 .describe('r', 'show summary report in given format')
-# push options
 .alias('d', 'date')
 .describe('d', 'select date for list or report using yyyy, yyyy-mm or yyyy-mm-dd')
 # general help
@@ -68,12 +73,6 @@ argv = yargs
 .strict()
 .argv
 
-groups =
-  t: 'ticket'
-  a: 'allgemein'
-  b: 'betrieb'
-  e: 'entwicklung'
-  j: 'jira'
 
 # Helper
 # -------------------------------------------------
@@ -176,8 +175,30 @@ readlog = (date, cb) ->
         cb()
     , (err) -> cb err, log
 
+group = (logs) ->
+  data = {}
+  for log in logs
+    # calculate previous line
+    if last
+      diff = Math.ceil moment(log.time).diff last.time, 'minutes', true
+      day = last.time[0..9]
+      data[day] ?= {}
+      data[day][last.name] ?=
+        group: last.group
+        time: 0
+        comment: ''
+      data[day][last.name].time += diff
+      data[day][last.name].comment += "#{last.desc}\n"
+    # keep for next line
+    last = if log.name? then log else null
+  data
+
+# Different reports
+# -------------------------------------------------
 report =
-  divibib: (logs, cb) ->
+  # ### list
+  # Chronological list of tasks which were done
+  list: (logs, cb) ->
     console.log 'DATE\tSTART\tEND\tMINUTES\tGROUP\tTASK'
     last = null
     for log in logs
@@ -189,46 +210,18 @@ report =
       # keep for next line
       last = if log.name? then log else null
     cb()
+  # ### summary
+  # calculation of each task per day
   summary: (logs, cb) ->
-    data = {}
-    for log in logs
-      # calculate previous line
-      if last
-        diff = Math.ceil moment(log.time).diff last.time, 'minutes', true
-        day = last.time[0..9]
-        data[day] ?= {}
-        data[day][last.name] ?=
-          group: last.group
-          time: 0
-          comment: ''
-        data[day][last.name].time += diff
-        data[day][last.name].comment += "#{last.desc}\n"
-      # keep for next line
-      last = if log.name? then log else null
     console.log "DAY\tMINUTES\tGROUP\tTASK"
-    for day,entry of data
+    for day,entry of group logs
       for name,task of entry
         console.log "#{day}\t#{task.time}\t#{task.group[0]}\t#{task.group[1]}"
     cb()
 
-# Run
+# Start the processing
 # -------------------------------------------------
-if argv.list
-  readlog argv.date, (err, logs) ->
-    throw err if err
-    console.log """| TIME                |    GROUP     |      NAME        | COMMENT   #{string.repeat ' ', 50} |
-    |---------------------|--------------|------------------|-#{string.repeat '-', 60}-|
-    """
-    for log in logs
-      if log.name
-        console.log "| #{log.time[0..18].replace /T/, ' '}
-        | #{string.rpad log.group[0], 12}
-        | #{string.rpad log.group[1], 16}
-        | #{string.rpad log.desc, 60} |"
-      else
-        console.log "| #{log.time[0..18].replace /T/, ' '}
-        |              |                  | #{string.repeat ' ', 60} |"
-else if argv.report?
+if argv.report?
   readlog argv.date, (err, logs) ->
     throw err if err
     unless report[argv.report]?
