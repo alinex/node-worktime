@@ -32,7 +32,9 @@ chalk = require 'chalk'
 prompt = require 'prompt'
 moment = require 'moment'
 # include alinex modules
+async = require 'alinex-async'
 fs = require 'alinex-fs'
+{string} = require 'alinex-util'
 errorHandler = require 'alinex-error'
 errorHandler.install()
 
@@ -126,10 +128,71 @@ description = (argv, cb) ->
   , (err, input) ->
     return cb err, input?.detail
 
+readlog = (date, cb) ->
+  date ?= moment().format 'YYYY-MM-DD'
+  dir = path.join __dirname, '../var/local/data'
+  log = []
+  # read all logs
+  if date.length is 10
+    file = path.join dir,  "#{date[0..6]}.log"
+    fs.readFile file, 'utf-8', (err, text) ->
+      return cb err if err
+      for line in text.trim().split /\n/
+        values = line.split /\ /
+        if string.starts values[0], date
+          names = values[1]?.split /-/
+          log.push
+            time: values[0]
+            name: values[1]
+            group: [names?[0], names?[1..].join '-']
+            desc: values[2..]?.join ' '
+      cb null, log
+  else if date.length is 7
+    file = path.join dir,  "#{date}.log"
+    fs.readFile file, 'utf-8', (err, text) ->
+      return cb err if err
+      for line in text.trim().split /\n/
+        values = line.split /\ /
+        names = values[1]?.split /-/
+        log.push
+          time: values[0]
+          name: values[1]
+          group: [names?[0], names?[1..].join '-']
+          desc: values[2..]?.join ' '
+      cb null, log
+  else
+    async.each [1..12], (month, cb) ->
+      file = path.join dir,  "#{date}-#{string.lpad month, 2, '0'}.log"
+      fs.readFile file, 'utf-8', (err, text) ->
+        unless err
+          for line in text.trim().split /\n/
+            values = line.split /\ /
+            names = values[1]?.split /-/
+            log.push
+              time: values[0]
+              name: values[1]
+              group: [names?[0], names?[1..].join '-']
+              desc: values[2..]?.join ' '
+        cb()
+    , (err) -> cb err, log
+
 # Run
 # -------------------------------------------------
 if argv.list
-  console.log 'LIST'
+  readlog argv.date, (err, logs) ->
+    throw err if err
+    console.log """| TIME                |    GROUP     |      NAME        | COMMENT   #{string.repeat ' ', 50} |
+    |---------------------|--------------|------------------|-#{string.repeat '-', 60}-|
+    """
+    for log in logs
+      if log.name
+        console.log "| #{log.time[0..18].replace /T/, ' '}
+        | #{string.rpad log.group[0], 12}
+        | #{string.rpad log.group[1], 16}
+        | #{string.rpad log.desc, 60} |"
+      else
+        console.log "| #{log.time[0..18].replace /T/, ' '}
+        |              |                  | #{string.repeat ' ', 60} |"
 else if argv.report
   console.log 'REPORT'
 else unless argv._?[0]
