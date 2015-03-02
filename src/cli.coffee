@@ -93,7 +93,6 @@ addlog = (task, desc, cb = ->) ->
       msg = if task then "#{time.format()} #{task} #{desc}\n" else "#{time.format()}\n"
       fs.appendFile file, msg, (err) ->
         return cb err if err
-        console.log file
         if task
           console.log "Your new task was logged."
         else
@@ -114,6 +113,19 @@ lastlog = (time, dir, file, cb) ->
     console.log chalk.yellow "You worked on #{task} for #{diff} minutes (#{desc})."
     cb()
 
+description = (argv, cb) ->
+  if argv.length > 1
+    return cb null, argv[1..].join ' '
+  # ask for details
+  prompt.start()
+  prompt.get
+    properties:
+      detail:
+        message: "Give some description to log #{task}"
+        validator: /.{5,}/,
+  , (err, input) ->
+    return cb err, input?.detail
+
 # Run
 # -------------------------------------------------
 if argv.list
@@ -124,14 +136,7 @@ else unless argv._?[0]
   addlog()
 else
   task = argv._[0]
-  # ask for details
-  prompt.start()
-  prompt.get
-    properties:
-      detail:
-        message: "Give some description to log #{task}"
-        validator: /.{5,}/,
-  , (err, input) ->
+  description argv._, (err, desc) ->
     throw err if err
-    addlog task, input.detail, (err) ->
+    addlog task, desc, (err) ->
       throw err if err
