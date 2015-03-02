@@ -66,9 +66,21 @@ argv = yargs
 .strict()
 .argv
 
+groups =
+  t: 'ticket'
+  a: 'allgemein'
+  b: 'betrieb'
+  e: 'entwicklung'
+  j: 'jira'
+
 # Helper
 # -------------------------------------------------
 addlog = (task, desc, cb = ->) ->
+  # extend task
+  if task
+    cat = task.split /-/
+    task = groups[cat[0]] ? cat[0]
+    task += '-' + cat[1..].join '-' if cat.length > 1
   # get logfile
   time = moment()
   dir = path.join __dirname, '../var/local/data'
@@ -76,10 +88,12 @@ addlog = (task, desc, cb = ->) ->
   # output last log
   lastlog time, dir, file, ->
     # write new log
-    fs.mkdirs dir, ->
+    fs.mkdirs dir, (err) ->
+      return cb err if err
       msg = if task then "#{time.format()} #{task} #{desc}\n" else "#{time.format()}\n"
       fs.appendFile file, msg, (err) ->
         return cb err if err
+        console.log file
         if task
           console.log "Your new task was logged."
         else
@@ -88,7 +102,7 @@ addlog = (task, desc, cb = ->) ->
 
 lastlog = (time, dir, file, cb) ->
   fs.readFile file, 'utf-8', (err, text) ->
-    return if err
+    return cb() if err
     lines = text.trim().split /\n/
     values = lines[lines.length-1].split /\ /
     # only go on if no end log
