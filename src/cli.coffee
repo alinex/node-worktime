@@ -55,9 +55,9 @@ argv = yargs
 .boolean('l')
 .alias('l', 'list')
 .describe('l', 'list log times')
-.boolean('r')
+.string('r')
 .alias('r', 'report')
-.describe('r', 'show summary report')
+.describe('r', 'show summary report in given format')
 # push options
 .alias('d', 'date')
 .describe('d', 'select date for list or report using yyyy, yyyy-mm or yyyy-mm-dd')
@@ -109,7 +109,7 @@ lastlog = (time, dir, file, cb) ->
     # only go on if no end log
     return cb() unless values.length > 2
     stime = moment values[0]
-    diff = time.diff stime, 'minutes'
+    diff = Math.ceil time.diff stime, 'minutes', true
     task = values[1]
     desc = values[2..].join ' '
     console.log chalk.yellow "You worked on #{task} for #{diff} minutes (#{desc})."
@@ -176,6 +176,41 @@ readlog = (date, cb) ->
         cb()
     , (err) -> cb err, log
 
+report =
+  divibib: (logs, cb) ->
+    console.log 'DATE\tSTART\tEND\tMINUTES\tGROUP\tTASK'
+    last = null
+    for log in logs
+      # calculate previous line
+      if last
+        diff = Math.ceil moment(log.time).diff last.time, 'minutes', true
+        console.log "#{last.time[0..9]}\t#{last.time[11..15]}\t#{log.time[11..15]}\t\
+        #{diff}\t#{last.group[0]}\t#{last.group[1]}: #{last.desc}"
+      # keep for next line
+      last = if log.name? then log else null
+    cb()
+  summary: (logs, cb) ->
+    data = {}
+    for log in logs
+      # calculate previous line
+      if last
+        diff = Math.ceil moment(log.time).diff last.time, 'minutes', true
+        day = last.time[0..9]
+        data[day] ?= {}
+        data[day][last.name] ?=
+          group: last.group
+          time: 0
+          comment: ''
+        data[day][last.name].time += diff
+        data[day][last.name].comment += "#{last.desc}\n"
+      # keep for next line
+      last = if log.name? then log else null
+    console.log "DAY\tMINUTES\tGROUP\tTASK"
+    for day,entry of data
+      for name,task of entry
+        console.log "#{day}\t#{task.time}\t#{task.group[0]}\t#{task.group[1]}"
+    cb()
+
 # Run
 # -------------------------------------------------
 if argv.list
@@ -193,8 +228,13 @@ if argv.list
       else
         console.log "| #{log.time[0..18].replace /T/, ' '}
         |              |                  | #{string.repeat ' ', 60} |"
-else if argv.report
-  console.log 'REPORT'
+else if argv.report?
+  readlog argv.date, (err, logs) ->
+    throw err if err
+    unless report[argv.report]?
+      console.error chalk.red "Please specify a valid report format: #{Object.keys(report).join ', '}"
+    report[argv.report] logs, (err) ->
+      throw err if err
 else unless argv._?[0]
   addlog()
 else
