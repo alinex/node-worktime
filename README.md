@@ -12,11 +12,15 @@ Install
 
 Install the package globally using npm:
 
-    > sudo npm install -g alinex-worktime --production
+``` sh
+sudo npm install -g alinex-worktime --production
+```
 
 After global installation you may directly call `worktime` from anywhere.
 
-    > worktime --help
+``` sh
+worktime --help
+```
 
 [![NPM](https://nodei.co/npm/alinex-worktime.png?downloads=true&stars=true)](https://nodei.co/npm/alinex-worktime/)
 
@@ -24,26 +28,29 @@ After global installation you may directly call `worktime` from anywhere.
 Usage
 -------------------------------------------------
 
-    Usage: `worktime [task] [comment]`
-           `worktime -r <report-name> -d <date>`
+``` text
+Usage: `worktime [task] [comment]`
+       `worktime -r <report-name> -d <date>`
 
-    Options:
-      -r, --report  show summary report in given format
-      -d, --date    select date for list or report using yyyy, yyyy-mm or yyyy-mm-dd
+Options:
+  -r, --report  show summary report in given format
+  -d, --date    select date for list or report using yyyy, yyyy-mm or yyyy-mm-dd
 
-      -h, --help    Show help
+  -h, --help    Show help
+```
 
 
 Examples:
 -------------------------------------------------
 
-    worktime t-1212                    to log the start on working on
-                                             ticket 1212
-  node bin/worktime                          to end working on the previous task
-
-  node bin/worktime -r summary -d 2015-03    to get a summary report for the
-                                             given date
-
+``` sh
+# to log the start on working on ticket 1212
+worktime t-1212
+# to end working on the previous task
+worktime
+# to get a summary report for the given date
+worktime -r summary -d 2015-03
+```
 
 
 License
