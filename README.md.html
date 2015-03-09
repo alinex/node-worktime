@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>README.md</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <link rel="stylesheet" media="all" href="doc-style.css" />
+  <script src="doc-filelist.js"></script>
+  <script>
+    var relativeDir = "", thisFile = "home/alex/a3//README.md", defaultSidebar = true;
+  </script>
+  <script src="doc-script.js"></script>
+  <script src="fileSearch.js"></script>
+  <script src="goToLine.js"></script>
+  <link rel="stylesheet" href="fileSearch.css" />
+  <link rel="stylesheet" href="goToLine.css" />
+</head>
+<body>
+  <div id="sidebar_wrapper">
+    <div id="sidebar_switch">
+      <span class="tree">Files</span>
+      <span class="headings">Headings</span>
+    </div>
+    <div id="tree"></div>
+    <div id="headings">
+      <div class="heading h1">
+        <a href="#package%3A%20alinex-worktime">Package: alinex-worktime</a>
+      </div>
+      <div class="heading h2">
+        <a href="#install">Install</a>
+      </div>
+      <div class="heading h2">
+        <a href="#usage">Usage</a>
+      </div>
+      <div class="heading h2">
+        <a href="#examples%3A">Examples:</a>
+      </div>
+      <div class="heading h2">
+        <a href="#license">License</a>
+      </div>
+    </div>
+  </div>
+  <div id="sidebar-toggle"></div>
+  <div id="container"><a id="fork" href="https://github.com/alinex/node-worktime" title="Fork me on GitHub"></a><div class="docs markdown">
+<div class="pilwrap" id="package%3A%20alinex-worktime">
+  <h1>
+    <a href="#package%3A%20alinex-worktime" name="package%3A%20alinex-worktime" class="pilcrow">&#182;</a>
+    Package: alinex-worktime
+  </h1>
+</div>
+
+
+<p><a href="https://travis-ci.org/alinex/node-worktime"><img src="https://travis-ci.org/alinex/node-worktime.svg?branch=master" alt="Build Status" title="" /></a>
+<a href="https://gemnasium.com/alinex/node-worktime"><img src="https://gemnasium.com/alinex/node-worktime.png" alt="Dependency Status" title="" /></a></p>
+
+<p>This tool will help to log work-times for different tasks.</p>
+
+
+<div class="pilwrap" id="install">
+  <h2>
+    <a href="#install" name="install" class="pilcrow">&#182;</a>
+    Install
+  </h2>
+</div>
+
+
+<p>Install the package globally using npm:</p>
+
+
+<div class="highlight"><pre><code>sudo npm install -g alinex-worktime --production
+</code></pre></div>
+
+
+
+<p>After global installation you may directly call <code>worktime</code> from anywhere.</p>
+
+
+<div class="highlight"><pre><code>worktime --help
+</code></pre></div>
+
+
+
+<p><a href="https://nodei.co/npm/alinex-worktime/"><img src="https://nodei.co/npm/alinex-worktime.png?downloads=true&amp;stars=true" alt="NPM" title="" /></a></p>
+
+
+<div class="pilwrap" id="usage">
+  <h2>
+    <a href="#usage" name="usage" class="pilcrow">&#182;</a>
+    Usage
+  </h2>
+</div>
+
+
+
+<div class="highlight"><pre><code>Usage: `worktime [task] [comment]`
+       `worktime -r &lt;report-name&gt; -d &lt;date&gt;`
+
+Options:
+  -r, --report  show summary report in given format
+  -d, --date    select date for list or report using yyyy, yyyy-mm or yyyy-mm-dd
+
+  -h, --help    Show help
+</code></pre></div>
+
+
+
+
+<div class="pilwrap" id="examples%3A">
+  <h2>
+    <a href="#examples%3A" name="examples%3A" class="pilcrow">&#182;</a>
+    Examples:
+  </h2>
+</div>
+
+
+
+<div class="highlight"><pre><code><span class="c"># to log the start on working on ticket 1212</span>
+worktime t-1212
+<span class="c"># to end working on the previous task</span>
+worktime
+<span class="c"># to get a summary report for the given date</span>
+worktime -r summary -d 2015-03
+</code></pre></div>
+
+
+
+
+<div class="pilwrap" id="license">
+  <h2>
+    <a href="#license" name="license" class="pilcrow">&#182;</a>
+    License
+  </h2>
+</div>
+
+
+<p>Copyright 2015 Alexander Schilling</p>
+
+<p>Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at</p>
+
+<blockquote>
+  <p><a href="http://www.apache.org/licenses/LICENSE-2.0">http://www.apache.org/licenses/LICENSE-2.0</a></p>
+</blockquote>
+
+<p>Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.</p></div>
+  </div>
+</body>
+</html>

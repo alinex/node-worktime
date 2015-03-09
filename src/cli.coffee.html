@@ -1,0 +1,616 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>cli.coffee</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <link rel="stylesheet" media="all" href="../doc-style.css" />
+  <script src="../doc-filelist.js"></script>
+  <script>
+    var relativeDir = "../", thisFile = "home/alex/a3//src/cli.coffee", defaultSidebar = true;
+  </script>
+  <script src="../doc-script.js"></script>
+  <script src="../fileSearch.js"></script>
+  <script src="../goToLine.js"></script>
+  <link rel="stylesheet" href="../fileSearch.css" />
+  <link rel="stylesheet" href="../goToLine.css" />
+</head>
+<body>
+  <div id="sidebar_wrapper">
+    <div id="sidebar_switch">
+      <span class="tree">Files</span>
+      <span class="headings">Headings</span>
+    </div>
+    <div id="tree"></div>
+    <div id="headings">
+      <div class="heading h1">
+        <a href="#startup%20script">Startup script</a>
+      </div>
+      <div class="heading h3">
+        <a href="#main%20routine">Main routine</a>
+      </div>
+      <div class="heading h3">
+        <a href="#task%20libraries">Task libraries</a>
+      </div>
+      <div class="heading h2">
+        <a href="#node%20modules">Node Modules</a>
+      </div>
+      <div class="heading h2">
+        <a href="#configuration%20of%20shortcut%20groups">Configuration of shortcut groups</a>
+      </div>
+      <div class="heading h2">
+        <a href="#start%20argument%20parsing">Start argument parsing</a>
+      </div>
+      <div class="heading h2">
+        <a href="#helper">Helper</a>
+      </div>
+      <div class="heading h2">
+        <a href="#different%20reports">Different reports</a>
+      </div>
+      <div class="heading h3">
+        <a href="#list">list</a>
+      </div>
+      <div class="heading h3">
+        <a href="#summary">summary</a>
+      </div>
+      <div class="heading h2">
+        <a href="#start%20the%20processing">Start the processing</a>
+      </div>
+    </div>
+  </div>
+  <div id="sidebar-toggle"></div>
+  <div id="container"><a id="fork" href="https://github.com/alinex/node-worktime" title="Fork me on GitHub"></a><div class="background highlight"></div>
+<table cellpadding="0" cellspacing="0">
+  <tbody>
+      <tr>
+        <td class="docs">
+<div class="pilwrap" id="startup%20script">
+  <h1>
+    <a href="#startup%20script" name="startup%20script" class="pilcrow">&#182;</a>
+    Startup script
+  </h1>
+</div>
+
+
+<p>This file is used to manage the whole build environment.</p>
+
+
+<div class="pilwrap" id="main%20routine">
+  <h3>
+    <a href="#main%20routine" name="main%20routine" class="pilcrow">&#182;</a>
+    Main routine
+  </h3>
+</div>
+
+
+<p>This file defines the command line interface with the defined commands. They
+will be run in parallel as possible.</p>
+
+<p>It will work with an boolean <code>success</code> value which is handed through the
+functions to define if everything went correct or something was not possible.
+If an real and unexpected error occur it will be thrown. All errors which
+aren't caught will end in an error and abort with exit code 2.</p>
+
+
+<div class="pilwrap" id="task%20libraries">
+  <h3>
+    <a href="#task%20libraries" name="task%20libraries" class="pilcrow">&#182;</a>
+    Task libraries
+  </h3>
+</div>
+
+
+<p>Each task is made available as separate task module with the <code>run</code> method
+to be called for each alinex package. The given command on the command line
+call may trigger multiple tasks which are done.</p>
+
+<p>Each task will get a <code>command</code> object which holds all the information from the
+command line call.</p>
+        </td>
+        <td class="code highlight"><div class="highlight"><pre></pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap" id="node%20modules">
+  <h2>
+    <a href="#node%20modules" name="node%20modules" class="pilcrow">&#182;</a>
+    Node Modules
+  </h2>
+</div>
+
+        </td>
+        <td class="code highlight"><div class="highlight"><pre>
+
+
+</pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-3" id="section-3">&#182;</a>
+</div>
+<p>include base modules</p>
+        </td>
+        <td class="code highlight"><div class="highlight"><pre>
+<span class="nv">yargs = </span><span class="nx">require</span> <span class="s">&#39;yargs&#39;</span>
+<span class="nv">path = </span><span class="nx">require</span> <span class="s">&#39;path&#39;</span>
+<span class="nv">chalk = </span><span class="nx">require</span> <span class="s">&#39;chalk&#39;</span>
+<span class="nv">prompt = </span><span class="nx">require</span> <span class="s">&#39;prompt&#39;</span>
+<span class="nv">moment = </span><span class="nx">require</span> <span class="s">&#39;moment&#39;</span>
+
+</pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-4" id="section-4">&#182;</a>
+</div>
+<p>include alinex modules</p>
+        </td>
+        <td class="code highlight"><div class="highlight"><pre>
+<span class="nv">async = </span><span class="nx">require</span> <span class="s">&#39;alinex-async&#39;</span>
+<span class="nv">fs = </span><span class="nx">require</span> <span class="s">&#39;alinex-fs&#39;</span>
+<span class="p">{</span><span class="nx">string</span><span class="p">}</span> <span class="o">=</span> <span class="nx">require</span> <span class="s">&#39;alinex-util&#39;</span>
+<span class="nv">errorHandler = </span><span class="nx">require</span> <span class="s">&#39;alinex-error&#39;</span>
+<span class="nx">errorHandler</span><span class="p">.</span><span class="nx">install</span><span class="p">()</span>
+
+
+
+</pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap" id="configuration%20of%20shortcut%20groups">
+  <h2>
+    <a href="#configuration%20of%20shortcut%20groups" name="configuration%20of%20shortcut%20groups" class="pilcrow">&#182;</a>
+    Configuration of shortcut groups
+  </h2>
+</div>
+
+        </td>
+        <td class="code highlight"><div class="highlight"><pre>
+<span class="nv">groups =</span>
+  <span class="nv">a: </span><span class="s">&#39;allgemein&#39;</span>
+  <span class="nv">b: </span><span class="s">&#39;betrieb&#39;</span>
+  <span class="nv">e: </span><span class="s">&#39;entwicklung&#39;</span>
+  <span class="nv">t: </span><span class="s">&#39;ticket&#39;</span>
+  <span class="nv">j: </span><span class="s">&#39;jira&#39;</span>
+
+
+</pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap" id="start%20argument%20parsing">
+  <h2>
+    <a href="#start%20argument%20parsing" name="start%20argument%20parsing" class="pilcrow">&#182;</a>
+    Start argument parsing
+  </h2>
+</div>
+
+        </td>
+        <td class="code highlight"><div class="highlight"><pre>
+<span class="nv">argv = </span><span class="nx">yargs</span>
+<span class="p">.</span><span class="nx">usage</span><span class="p">(</span><span class="s">&quot;&quot;&quot;</span>
+<span class="s">  Utility to log work times on different projects.</span>
+
+<span class="s">  Usage: $0 [task] [comment]</span>
+<span class="s">  .      $0 -r &lt;report name&gt; -d &lt;date&gt;</span>
+<span class="s">  &quot;&quot;&quot;</span><span class="p">)</span>
+
+</pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-7" id="section-7">&#182;</a>
+</div>
+<p>examples</p>
+        </td>
+        <td class="code highlight"><div class="highlight"><pre>
+<span class="p">.</span><span class="nx">example</span><span class="p">(</span><span class="s">&#39;$0 t-1212&#39;</span><span class="p">,</span> <span class="s">&#39;to log the start on working on ticket 1212&#39;</span><span class="p">)</span>
+<span class="p">.</span><span class="nx">example</span><span class="p">(</span><span class="s">&#39;$0&#39;</span><span class="p">,</span> <span class="s">&#39;to end working on the previous task&#39;</span><span class="p">)</span>
+<span class="p">.</span><span class="nx">example</span><span class="p">(</span><span class="s">&#39;$0 -r summary -d 2015-03&#39;</span><span class="p">,</span> <span class="s">&#39;to get a summary report for the given date&#39;</span><span class="p">)</span>
+
+</pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-8" id="section-8">&#182;</a>
+</div>
+<p>report options</p>
+        </td>
+        <td class="code highlight"><div class="highlight"><pre>
+<span class="p">.</span><span class="nx">string</span><span class="p">(</span><span class="s">&#39;r&#39;</span><span class="p">)</span>
+<span class="p">.</span><span class="nx">alias</span><span class="p">(</span><span class="s">&#39;r&#39;</span><span class="p">,</span> <span class="s">&#39;report&#39;</span><span class="p">)</span>
+<span class="p">.</span><span class="nx">describe</span><span class="p">(</span><span class="s">&#39;r&#39;</span><span class="p">,</span> <span class="s">&#39;show summary report in given format&#39;</span><span class="p">)</span>
+<span class="p">.</span><span class="nx">alias</span><span class="p">(</span><span class="s">&#39;d&#39;</span><span class="p">,</span> <span class="s">&#39;date&#39;</span><span class="p">)</span>
+<span class="p">.</span><span class="nx">describe</span><span class="p">(</span><span class="s">&#39;d&#39;</span><span class="p">,</span> <span class="s">&#39;select date for list or report using yyyy, yyyy-mm or yyyy-mm-dd&#39;</span><span class="p">)</span>
+
+</pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-9" id="section-9">&#182;</a>
+</div>
+<p>general help</p>
+        </td>
+        <td class="code highlight"><div class="highlight"><pre>
+<span class="p">.</span><span class="nx">help</span><span class="p">(</span><span class="s">&#39;h&#39;</span><span class="p">)</span>
+<span class="p">.</span><span class="nx">alias</span><span class="p">(</span><span class="s">&#39;h&#39;</span><span class="p">,</span> <span class="s">&#39;help&#39;</span><span class="p">)</span>
+<span class="p">.</span><span class="nx">showHelpOnFail</span><span class="p">(</span><span class="kc">false</span><span class="p">,</span> <span class="s">&quot;Specify --help for available options&quot;</span><span class="p">)</span>
+<span class="p">.</span><span class="nx">strict</span><span class="p">()</span>
+<span class="p">.</span><span class="nx">argv</span>
+
+
+
+</pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap" id="helper">
+  <h2>
+    <a href="#helper" name="helper" class="pilcrow">&#182;</a>
+    Helper
+  </h2>
+</div>
+
+        </td>
+        <td class="code highlight"><div class="highlight"><pre>
+<span class="nv">addlog = </span><span class="nf">(task, desc, cb = -&gt;) -&gt;</span>
+
+</pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-11" id="section-11">&#182;</a>
+</div>
+<p>extend task</p>
+        </td>
+        <td class="code highlight"><div class="highlight"><pre>
+  <span class="k">if</span> <span class="nx">task</span>
+    <span class="nv">cat = </span><span class="nx">task</span><span class="p">.</span><span class="nx">split</span> <span class="sr">/-/</span>
+    <span class="nv">task = </span><span class="nx">groups</span><span class="p">[</span><span class="nx">cat</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span> <span class="o">?</span> <span class="nx">cat</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="nx">task</span> <span class="o">+=</span> <span class="s">&#39;-&#39;</span> <span class="o">+</span> <span class="nx">cat</span><span class="p">[</span><span class="mi">1</span><span class="p">..].</span><span class="nx">join</span> <span class="s">&#39;-&#39;</span> <span class="k">if</span> <span class="nx">cat</span><span class="p">.</span><span class="nx">length</span> <span class="o">&gt;</span> <span class="mi">1</span>
+
+</pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-12" id="section-12">&#182;</a>
+</div>
+<p>get logfile</p>
+        </td>
+        <td class="code highlight"><div class="highlight"><pre>
+  <span class="nv">time = </span><span class="nx">moment</span><span class="p">()</span>
+  <span class="nv">dir = </span><span class="nx">path</span><span class="p">.</span><span class="nx">join</span> <span class="nx">__dirname</span><span class="p">,</span> <span class="s">&#39;../var/local/data&#39;</span>
+  <span class="nv">file = </span><span class="nx">path</span><span class="p">.</span><span class="nx">join</span> <span class="nx">dir</span><span class="p">,</span> <span class="s">&quot;</span><span class="si">#{</span><span class="nx">time</span><span class="p">.</span><span class="nx">format</span> <span class="s">&#39;YYYY-MM&#39;</span><span class="si">}</span><span class="s">.log&quot;</span>
+
+</pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-13" id="section-13">&#182;</a>
+</div>
+<p>output last log</p>
+        </td>
+        <td class="code highlight"><div class="highlight"><pre>
+  <span class="nx">lastlog</span> <span class="nx">time</span><span class="p">,</span> <span class="nx">dir</span><span class="p">,</span> <span class="nx">file</span><span class="p">,</span> <span class="nf">-&gt;</span>
+
+</pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-14" id="section-14">&#182;</a>
+</div>
+<p>write new log</p>
+        </td>
+        <td class="code highlight"><div class="highlight"><pre>
+    <span class="nx">fs</span><span class="p">.</span><span class="nx">mkdirs</span> <span class="nx">dir</span><span class="p">,</span> <span class="nf">(err) -&gt;</span>
+      <span class="k">return</span> <span class="nx">cb</span> <span class="nx">err</span> <span class="k">if</span> <span class="nx">err</span>
+      <span class="nv">msg = </span><span class="k">if</span> <span class="nx">task</span> <span class="k">then</span> <span class="s">&quot;</span><span class="si">#{</span><span class="nx">time</span><span class="p">.</span><span class="nx">format</span><span class="p">()</span><span class="si">}</span><span class="s"> </span><span class="si">#{</span><span class="nx">task</span><span class="si">}</span><span class="s"> </span><span class="si">#{</span><span class="nx">desc</span><span class="si">}</span><span class="s">\n&quot;</span> <span class="k">else</span> <span class="s">&quot;</span><span class="si">#{</span><span class="nx">time</span><span class="p">.</span><span class="nx">format</span><span class="p">()</span><span class="si">}</span><span class="s">\n&quot;</span>
+      <span class="nx">fs</span><span class="p">.</span><span class="nx">appendFile</span> <span class="nx">file</span><span class="p">,</span> <span class="nx">msg</span><span class="p">,</span> <span class="nf">(err) -&gt;</span>
+        <span class="k">return</span> <span class="nx">cb</span> <span class="nx">err</span> <span class="k">if</span> <span class="nx">err</span>
+        <span class="k">if</span> <span class="nx">task</span>
+          <span class="nx">console</span><span class="p">.</span><span class="nx">log</span> <span class="s">&quot;Your new task was logged.&quot;</span>
+        <span class="k">else</span>
+          <span class="nx">console</span><span class="p">.</span><span class="nx">log</span> <span class="s">&quot;Logged a stop of last task.&quot;</span>
+        <span class="nx">cb</span><span class="p">()</span>
+
+<span class="nv">lastlog = </span><span class="nf">(time, dir, file, cb) -&gt;</span>
+  <span class="nx">fs</span><span class="p">.</span><span class="nx">readFile</span> <span class="nx">file</span><span class="p">,</span> <span class="s">&#39;utf-8&#39;</span><span class="p">,</span> <span class="nf">(err, text) -&gt;</span>
+    <span class="k">return</span> <span class="nx">cb</span><span class="p">()</span> <span class="k">if</span> <span class="nx">err</span>
+    <span class="nv">lines = </span><span class="nx">text</span><span class="p">.</span><span class="nx">trim</span><span class="p">().</span><span class="nx">split</span> <span class="sr">/\n/</span>
+    <span class="nv">values = </span><span class="nx">lines</span><span class="p">[</span><span class="nx">lines</span><span class="p">.</span><span class="nx">length</span><span class="o">-</span><span class="mi">1</span><span class="p">].</span><span class="nx">split</span> <span class="sr">/\ /</span>
+
+</pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-15" id="section-15">&#182;</a>
+</div>
+<p>only go on if no end log</p>
+        </td>
+        <td class="code highlight"><div class="highlight"><pre>
+    <span class="k">return</span> <span class="nx">cb</span><span class="p">()</span> <span class="k">unless</span> <span class="nx">values</span><span class="p">.</span><span class="nx">length</span> <span class="o">&gt;</span> <span class="mi">2</span>
+    <span class="nv">stime = </span><span class="nx">moment</span> <span class="nx">values</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="nv">diff = </span><span class="nb">Math</span><span class="p">.</span><span class="nx">ceil</span> <span class="nx">time</span><span class="p">.</span><span class="nx">diff</span> <span class="nx">stime</span><span class="p">,</span> <span class="s">&#39;minutes&#39;</span><span class="p">,</span> <span class="kc">true</span>
+    <span class="nv">task = </span><span class="nx">values</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+    <span class="nv">desc = </span><span class="nx">values</span><span class="p">[</span><span class="mi">2</span><span class="p">..].</span><span class="nx">join</span> <span class="s">&#39; &#39;</span>
+    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span> <span class="nx">chalk</span><span class="p">.</span><span class="nx">yellow</span> <span class="s">&quot;You worked on </span><span class="si">#{</span><span class="nx">task</span><span class="si">}</span><span class="s"> for </span><span class="si">#{</span><span class="nx">diff</span><span class="si">}</span><span class="s"> minutes (</span><span class="si">#{</span><span class="nx">desc</span><span class="si">}</span><span class="s">).&quot;</span>
+    <span class="nx">cb</span><span class="p">()</span>
+
+<span class="nv">description = </span><span class="nf">(argv, cb) -&gt;</span>
+  <span class="k">if</span> <span class="nx">argv</span><span class="p">.</span><span class="nx">length</span> <span class="o">&gt;</span> <span class="mi">1</span>
+    <span class="k">return</span> <span class="nx">cb</span> <span class="kc">null</span><span class="p">,</span> <span class="nx">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">..].</span><span class="nx">join</span> <span class="s">&#39; &#39;</span>
+
+</pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-16" id="section-16">&#182;</a>
+</div>
+<p>ask for details</p>
+        </td>
+        <td class="code highlight"><div class="highlight"><pre>
+  <span class="nx">prompt</span><span class="p">.</span><span class="nx">start</span><span class="p">()</span>
+  <span class="nx">prompt</span><span class="p">.</span><span class="nx">get</span>
+    <span class="nv">properties:</span>
+      <span class="nv">detail:</span>
+        <span class="nv">message: </span><span class="s">&quot;Give some description to log </span><span class="si">#{</span><span class="nx">task</span><span class="si">}</span><span class="s">&quot;</span>
+        <span class="nv">validator: </span><span class="sr">/.{5,}/</span><span class="p">,</span>
+  <span class="p">,</span> <span class="nf">(err, input) -&gt;</span>
+    <span class="k">return</span> <span class="nx">cb</span> <span class="nx">err</span><span class="p">,</span> <span class="nx">input</span><span class="o">?</span><span class="p">.</span><span class="nx">detail</span>
+
+<span class="nv">readlog = </span><span class="nf">(date, cb) -&gt;</span>
+  <span class="nx">date</span> <span class="o">?=</span> <span class="nx">moment</span><span class="p">().</span><span class="nx">format</span> <span class="s">&#39;YYYY-MM-DD&#39;</span>
+  <span class="nv">dir = </span><span class="nx">path</span><span class="p">.</span><span class="nx">join</span> <span class="nx">__dirname</span><span class="p">,</span> <span class="s">&#39;../var/local/data&#39;</span>
+  <span class="nv">log = </span><span class="p">[]</span>
+
+</pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-17" id="section-17">&#182;</a>
+</div>
+<p>read all logs</p>
+        </td>
+        <td class="code highlight"><div class="highlight"><pre>
+  <span class="k">if</span> <span class="nx">date</span><span class="p">.</span><span class="nx">length</span> <span class="o">is</span> <span class="mi">10</span>
+    <span class="nv">file = </span><span class="nx">path</span><span class="p">.</span><span class="nx">join</span> <span class="nx">dir</span><span class="p">,</span>  <span class="s">&quot;</span><span class="si">#{</span><span class="nx">date</span><span class="p">[</span><span class="mi">0</span><span class="p">..</span><span class="mi">6</span><span class="p">]</span><span class="si">}</span><span class="s">.log&quot;</span>
+    <span class="nx">fs</span><span class="p">.</span><span class="nx">readFile</span> <span class="nx">file</span><span class="p">,</span> <span class="s">&#39;utf-8&#39;</span><span class="p">,</span> <span class="nf">(err, text) -&gt;</span>
+      <span class="k">return</span> <span class="nx">cb</span> <span class="nx">err</span> <span class="k">if</span> <span class="nx">err</span>
+      <span class="k">for</span> <span class="nx">line</span> <span class="k">in</span> <span class="nx">text</span><span class="p">.</span><span class="nx">trim</span><span class="p">().</span><span class="nx">split</span> <span class="sr">/\n/</span>
+        <span class="nv">values = </span><span class="nx">line</span><span class="p">.</span><span class="nx">split</span> <span class="sr">/\ /</span>
+        <span class="k">if</span> <span class="nx">string</span><span class="p">.</span><span class="nx">starts</span> <span class="nx">values</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="nx">date</span>
+          <span class="nv">names = </span><span class="nx">values</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">?</span><span class="p">.</span><span class="nx">split</span> <span class="sr">/-/</span>
+          <span class="nx">log</span><span class="p">.</span><span class="nx">push</span>
+            <span class="nv">time: </span><span class="nx">values</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="nv">name: </span><span class="nx">values</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+            <span class="nv">group: </span><span class="p">[</span><span class="nx">names</span><span class="o">?</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="nx">names</span><span class="o">?</span><span class="p">[</span><span class="mi">1</span><span class="p">..].</span><span class="nx">join</span> <span class="s">&#39;-&#39;</span><span class="p">]</span>
+            <span class="nv">desc: </span><span class="nx">values</span><span class="p">[</span><span class="mi">2</span><span class="p">..]</span><span class="o">?</span><span class="p">.</span><span class="nx">join</span> <span class="s">&#39; &#39;</span>
+      <span class="nx">cb</span> <span class="kc">null</span><span class="p">,</span> <span class="nx">log</span>
+  <span class="k">else</span> <span class="k">if</span> <span class="nx">date</span><span class="p">.</span><span class="nx">length</span> <span class="o">is</span> <span class="mi">7</span>
+    <span class="nv">file = </span><span class="nx">path</span><span class="p">.</span><span class="nx">join</span> <span class="nx">dir</span><span class="p">,</span>  <span class="s">&quot;</span><span class="si">#{</span><span class="nx">date</span><span class="si">}</span><span class="s">.log&quot;</span>
+    <span class="nx">fs</span><span class="p">.</span><span class="nx">readFile</span> <span class="nx">file</span><span class="p">,</span> <span class="s">&#39;utf-8&#39;</span><span class="p">,</span> <span class="nf">(err, text) -&gt;</span>
+      <span class="k">return</span> <span class="nx">cb</span> <span class="nx">err</span> <span class="k">if</span> <span class="nx">err</span>
+      <span class="k">for</span> <span class="nx">line</span> <span class="k">in</span> <span class="nx">text</span><span class="p">.</span><span class="nx">trim</span><span class="p">().</span><span class="nx">split</span> <span class="sr">/\n/</span>
+        <span class="nv">values = </span><span class="nx">line</span><span class="p">.</span><span class="nx">split</span> <span class="sr">/\ /</span>
+        <span class="nv">names = </span><span class="nx">values</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">?</span><span class="p">.</span><span class="nx">split</span> <span class="sr">/-/</span>
+        <span class="nx">log</span><span class="p">.</span><span class="nx">push</span>
+          <span class="nv">time: </span><span class="nx">values</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+          <span class="nv">name: </span><span class="nx">values</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+          <span class="nv">group: </span><span class="p">[</span><span class="nx">names</span><span class="o">?</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="nx">names</span><span class="o">?</span><span class="p">[</span><span class="mi">1</span><span class="p">..].</span><span class="nx">join</span> <span class="s">&#39;-&#39;</span><span class="p">]</span>
+          <span class="nv">desc: </span><span class="nx">values</span><span class="p">[</span><span class="mi">2</span><span class="p">..]</span><span class="o">?</span><span class="p">.</span><span class="nx">join</span> <span class="s">&#39; &#39;</span>
+      <span class="nx">cb</span> <span class="kc">null</span><span class="p">,</span> <span class="nx">log</span>
+  <span class="k">else</span>
+    <span class="nx">async</span><span class="p">.</span><span class="nx">each</span> <span class="p">[</span><span class="mi">1</span><span class="p">..</span><span class="mi">12</span><span class="p">],</span> <span class="nf">(month, cb) -&gt;</span>
+      <span class="nv">file = </span><span class="nx">path</span><span class="p">.</span><span class="nx">join</span> <span class="nx">dir</span><span class="p">,</span>  <span class="s">&quot;</span><span class="si">#{</span><span class="nx">date</span><span class="si">}</span><span class="s">-</span><span class="si">#{</span><span class="nx">string</span><span class="p">.</span><span class="nx">lpad</span> <span class="nx">month</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="s">&#39;0&#39;</span><span class="si">}</span><span class="s">.log&quot;</span>
+      <span class="nx">fs</span><span class="p">.</span><span class="nx">readFile</span> <span class="nx">file</span><span class="p">,</span> <span class="s">&#39;utf-8&#39;</span><span class="p">,</span> <span class="nf">(err, text) -&gt;</span>
+        <span class="k">unless</span> <span class="nx">err</span>
+          <span class="k">for</span> <span class="nx">line</span> <span class="k">in</span> <span class="nx">text</span><span class="p">.</span><span class="nx">trim</span><span class="p">().</span><span class="nx">split</span> <span class="sr">/\n/</span>
+            <span class="nv">values = </span><span class="nx">line</span><span class="p">.</span><span class="nx">split</span> <span class="sr">/\ /</span>
+            <span class="nv">names = </span><span class="nx">values</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">?</span><span class="p">.</span><span class="nx">split</span> <span class="sr">/-/</span>
+            <span class="nx">log</span><span class="p">.</span><span class="nx">push</span>
+              <span class="nv">time: </span><span class="nx">values</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+              <span class="nv">name: </span><span class="nx">values</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+              <span class="nv">group: </span><span class="p">[</span><span class="nx">names</span><span class="o">?</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="nx">names</span><span class="o">?</span><span class="p">[</span><span class="mi">1</span><span class="p">..].</span><span class="nx">join</span> <span class="s">&#39;-&#39;</span><span class="p">]</span>
+              <span class="nv">desc: </span><span class="nx">values</span><span class="p">[</span><span class="mi">2</span><span class="p">..]</span><span class="o">?</span><span class="p">.</span><span class="nx">join</span> <span class="s">&#39; &#39;</span>
+        <span class="nx">cb</span><span class="p">()</span>
+    <span class="p">,</span> <span class="nf">(err) -&gt;</span> <span class="nx">cb</span> <span class="nx">err</span><span class="p">,</span> <span class="nx">log</span>
+
+<span class="nv">group = </span><span class="nf">(logs) -&gt;</span>
+  <span class="nv">data = </span><span class="p">{}</span>
+  <span class="k">for</span> <span class="nx">log</span> <span class="k">in</span> <span class="nx">logs</span>
+
+</pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-18" id="section-18">&#182;</a>
+</div>
+<p>calculate previous line</p>
+        </td>
+        <td class="code highlight"><div class="highlight"><pre>
+    <span class="k">if</span> <span class="nx">last</span>
+      <span class="nv">diff = </span><span class="nb">Math</span><span class="p">.</span><span class="nx">ceil</span> <span class="nx">moment</span><span class="p">(</span><span class="nx">log</span><span class="p">.</span><span class="nx">time</span><span class="p">).</span><span class="nx">diff</span> <span class="nx">last</span><span class="p">.</span><span class="nx">time</span><span class="p">,</span> <span class="s">&#39;minutes&#39;</span><span class="p">,</span> <span class="kc">true</span>
+      <span class="nv">day = </span><span class="nx">last</span><span class="p">.</span><span class="nx">time</span><span class="p">[</span><span class="mi">0</span><span class="p">..</span><span class="mi">9</span><span class="p">]</span>
+      <span class="nx">data</span><span class="p">[</span><span class="nx">day</span><span class="p">]</span> <span class="o">?=</span> <span class="p">{}</span>
+      <span class="nx">data</span><span class="p">[</span><span class="nx">day</span><span class="p">][</span><span class="nx">last</span><span class="p">.</span><span class="nx">group</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span> <span class="o">?=</span> <span class="p">{}</span>
+      <span class="nx">data</span><span class="p">[</span><span class="nx">day</span><span class="p">][</span><span class="nx">last</span><span class="p">.</span><span class="nx">group</span><span class="p">[</span><span class="mi">0</span><span class="p">]][</span><span class="nx">last</span><span class="p">.</span><span class="nx">group</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">?</span> <span class="s">&#39;-&#39;</span><span class="p">]</span> <span class="o">?=</span>
+        <span class="nv">time: </span><span class="mi">0</span>
+        <span class="nv">comment: </span><span class="p">[]</span>
+      <span class="nv">entry = </span><span class="nx">data</span><span class="p">[</span><span class="nx">day</span><span class="p">][</span><span class="nx">last</span><span class="p">.</span><span class="nx">group</span><span class="p">[</span><span class="mi">0</span><span class="p">]][</span><span class="nx">last</span><span class="p">.</span><span class="nx">group</span><span class="p">[</span><span class="mi">1</span><span class="p">]]</span>
+      <span class="nx">entry</span><span class="p">.</span><span class="nx">time</span> <span class="o">+=</span> <span class="nx">diff</span>
+      <span class="nx">entry</span><span class="p">.</span><span class="nx">comment</span><span class="p">.</span><span class="nx">push</span> <span class="nx">last</span><span class="p">.</span><span class="nx">desc</span> <span class="k">unless</span> <span class="nx">last</span><span class="p">.</span><span class="nx">desc</span> <span class="k">in</span> <span class="nx">entry</span><span class="p">.</span><span class="nx">comment</span>
+
+</pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-19" id="section-19">&#182;</a>
+</div>
+<p>keep for next line</p>
+        </td>
+        <td class="code highlight"><div class="highlight"><pre>
+    <span class="nv">last = </span><span class="k">if</span> <span class="nx">log</span><span class="p">.</span><span class="nx">name</span><span class="o">?</span> <span class="k">then</span> <span class="nx">log</span> <span class="k">else</span> <span class="kc">null</span>
+  <span class="nx">data</span>
+
+
+</pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap" id="different%20reports">
+  <h2>
+    <a href="#different%20reports" name="different%20reports" class="pilcrow">&#182;</a>
+    Different reports
+  </h2>
+</div>
+
+        </td>
+        <td class="code highlight"><div class="highlight"><pre>
+<span class="nv">report =</span>
+
+</pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap" id="list">
+  <h3>
+    <a href="#list" name="list" class="pilcrow">&#182;</a>
+    list
+  </h3>
+</div>
+
+
+<p>Chronological list of tasks which were done</p>
+        </td>
+        <td class="code highlight"><div class="highlight"><pre>
+  <span class="nv">list: </span><span class="nf">(logs, cb) -&gt;</span>
+    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span> <span class="s">&#39;DATE\tSTART\tEND\tMINUTES\tGROUP\tTASK\tCOMMENT&#39;</span>
+    <span class="nv">last = </span><span class="kc">null</span>
+    <span class="k">for</span> <span class="nx">log</span> <span class="k">in</span> <span class="nx">logs</span>
+
+</pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-22" id="section-22">&#182;</a>
+</div>
+<p>calculate previous line</p>
+        </td>
+        <td class="code highlight"><div class="highlight"><pre>
+      <span class="k">if</span> <span class="nx">last</span>
+        <span class="nv">diff = </span><span class="nb">Math</span><span class="p">.</span><span class="nx">ceil</span> <span class="nx">moment</span><span class="p">(</span><span class="nx">log</span><span class="p">.</span><span class="nx">time</span><span class="p">).</span><span class="nx">diff</span> <span class="nx">last</span><span class="p">.</span><span class="nx">time</span><span class="p">,</span> <span class="s">&#39;minutes&#39;</span><span class="p">,</span> <span class="kc">true</span>
+        <span class="nx">console</span><span class="p">.</span><span class="nx">log</span> <span class="s">&quot;</span><span class="si">#{</span><span class="nx">last</span><span class="p">.</span><span class="nx">time</span><span class="p">[</span><span class="mi">0</span><span class="p">..</span><span class="mi">9</span><span class="p">]</span><span class="si">}</span><span class="s">\t</span><span class="si">#{</span><span class="nx">last</span><span class="p">.</span><span class="nx">time</span><span class="p">[</span><span class="mi">11</span><span class="p">..</span><span class="mi">15</span><span class="p">]</span><span class="si">}</span><span class="s">\t</span><span class="si">#{</span><span class="nx">log</span><span class="p">.</span><span class="nx">time</span><span class="p">[</span><span class="mi">11</span><span class="p">..</span><span class="mi">15</span><span class="p">]</span><span class="si">}</span><span class="s">\t\</span>
+
+</pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-23" id="section-23">&#182;</a>
+</div>
+<p>{diff}\t#{last.group[0]}\t#{last.group[1]}\t#{last.desc}"
+keep for next line</p>
+        </td>
+        <td class="code highlight"><div class="highlight"><pre>
+<span class="s">      last = if log.name? then log else null</span>
+<span class="s">    cb()</span>
+
+</pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap" id="summary">
+  <h3>
+    <a href="#summary" name="summary" class="pilcrow">&#182;</a>
+    summary
+  </h3>
+</div>
+
+
+<p>calculation of each task per day</p>
+        </td>
+        <td class="code highlight"><div class="highlight"><pre>
+<span class="s">  summary: (logs, cb) -&gt;</span>
+<span class="s">    console.log &quot;</span><span class="nx">DAY</span><span class="err">\</span><span class="nx">tMINUTES</span><span class="err">\</span><span class="nx">tGROUP</span><span class="err">\</span><span class="nx">tTASK</span><span class="s">&quot;</span>
+<span class="s">    for day,data of group logs</span>
+<span class="s">      for category of data</span>
+<span class="s">        for task,entry of data[category]</span>
+<span class="s">          console.log &quot;</span><span class="c1">#{day}\t#{entry.time}\t#{category}\t#{task}&quot;</span>
+    <span class="nx">cb</span><span class="p">()</span>
+
+
+</pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap" id="start%20the%20processing">
+  <h2>
+    <a href="#start%20the%20processing" name="start%20the%20processing" class="pilcrow">&#182;</a>
+    Start the processing
+  </h2>
+</div>
+
+        </td>
+        <td class="code highlight"><div class="highlight"><pre>
+<span class="k">if</span> <span class="nx">argv</span><span class="p">.</span><span class="nx">report</span><span class="o">?</span>
+  <span class="nx">readlog</span> <span class="nx">argv</span><span class="p">.</span><span class="nx">date</span><span class="p">,</span> <span class="nf">(err, logs) -&gt;</span>
+    <span class="k">throw</span> <span class="nx">err</span> <span class="k">if</span> <span class="nx">err</span>
+    <span class="k">unless</span> <span class="nx">report</span><span class="p">[</span><span class="nx">argv</span><span class="p">.</span><span class="nx">report</span><span class="p">]</span><span class="o">?</span>
+      <span class="nx">console</span><span class="p">.</span><span class="nx">error</span> <span class="nx">chalk</span><span class="p">.</span><span class="nx">red</span> <span class="s">&quot;Please specify a valid report format: </span><span class="si">#{</span><span class="nb">Object</span><span class="p">.</span><span class="nx">keys</span><span class="p">(</span><span class="nx">report</span><span class="p">).</span><span class="nx">join</span> <span class="s">&#39;, &#39;</span><span class="si">}</span><span class="s">&quot;</span>
+    <span class="nx">report</span><span class="p">[</span><span class="nx">argv</span><span class="p">.</span><span class="nx">report</span><span class="p">]</span> <span class="nx">logs</span><span class="p">,</span> <span class="nf">(err) -&gt;</span>
+      <span class="k">throw</span> <span class="nx">err</span> <span class="k">if</span> <span class="nx">err</span>
+<span class="k">else</span> <span class="k">unless</span> <span class="nx">argv</span><span class="p">.</span><span class="nx">_</span><span class="o">?</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+  <span class="nx">addlog</span><span class="p">()</span>
+<span class="k">else</span>
+  <span class="nv">task = </span><span class="nx">argv</span><span class="p">.</span><span class="nx">_</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+  <span class="nx">description</span> <span class="nx">argv</span><span class="p">.</span><span class="nx">_</span><span class="p">,</span> <span class="nf">(err, desc) -&gt;</span>
+    <span class="k">throw</span> <span class="nx">err</span> <span class="k">if</span> <span class="nx">err</span>
+    <span class="nx">addlog</span> <span class="nx">task</span><span class="p">,</span> <span class="nx">desc</span><span class="p">,</span> <span class="nf">(err) -&gt;</span>
+      <span class="k">throw</span> <span class="nx">err</span> <span class="k">if</span> <span class="nx">err</span>
+</pre></div>
+        </td>
+      </tr>
+  </tbody>
+</table>
+  </div>
+</body>
+</html>
