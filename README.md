@@ -1,8 +1,8 @@
 Package: alinex-worktime
 =================================================
 
-[![Build Status] (https://travis-ci.org/alinex/node-worktime.svg?branch=master)](https://travis-ci.org/alinex/node-worktime)
-[![Dependency Status] (https://gemnasium.com/alinex/node-worktime.png)](https://gemnasium.com/alinex/node-worktime)
+[![Build Status](https://travis-ci.org/alinex/node-worktime.svg?branch=master)](https://travis-ci.org/alinex/node-worktime)
+[![Dependency Status](https://gemnasium.com/alinex/node-worktime.png)](https://gemnasium.com/alinex/node-worktime)
 
 This tool will help to log work-times for different tasks.
 
