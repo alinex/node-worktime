@@ -7,7 +7,7 @@
   <script src="../doc-filelist.js"></script>
   <script>
     var relativeDir = "../";
-    var thisFile = "home/alex/github/node-worktime/src/cli.coffee";
+    var thisFile = "src/cli.coffee";
     var defaultSidebar = true;
   </script>
   <script src="../doc-script.js"></script>
@@ -160,8 +160,7 @@ Node Modules
 path = <span class="hljs-built_in">require</span> <span class="hljs-string">'path'</span>
 chalk = <span class="hljs-built_in">require</span> <span class="hljs-string">'chalk'</span>
 prompt = <span class="hljs-built_in">require</span> <span class="hljs-string">'prompt'</span>
-moment = <span class="hljs-built_in">require</span> <span class="hljs-string">'moment'</span>
-</pre>
+moment = <span class="hljs-built_in">require</span> <span class="hljs-string">'moment'</span></pre>
         </td>
       </tr>
     
@@ -178,10 +177,7 @@ moment = <span class="hljs-built_in">require</span> <span class="hljs-string">'m
 fs = <span class="hljs-built_in">require</span> <span class="hljs-string">'alinex-fs'</span>
 {string} = <span class="hljs-built_in">require</span> <span class="hljs-string">'alinex-util'</span>
 errorHandler = <span class="hljs-built_in">require</span> <span class="hljs-string">'alinex-error'</span>
-errorHandler.install()
-
-
-</pre>
+errorHandler.install()</pre>
         </td>
       </tr>
     
@@ -197,13 +193,11 @@ Configuration of shortcut groups
         </td>
         <td class="code highlight">
           <pre class="coffeescript">groups =
-  <span class="hljs-attribute">a</span>: <span class="hljs-string">'allgemein'</span>
-  <span class="hljs-attribute">b</span>: <span class="hljs-string">'betrieb'</span>
-  <span class="hljs-attribute">e</span>: <span class="hljs-string">'entwicklung'</span>
-  <span class="hljs-attribute">t</span>: <span class="hljs-string">'ticket'</span>
-  <span class="hljs-attribute">j</span>: <span class="hljs-string">'jira'</span>
-
-</pre>
+  a: <span class="hljs-string">'allgemein'</span>
+  b: <span class="hljs-string">'betrieb'</span>
+  e: <span class="hljs-string">'entwicklung'</span>
+  t: <span class="hljs-string">'ticket'</span>
+  j: <span class="hljs-string">'jira'</span></pre>
         </td>
       </tr>
     
@@ -224,8 +218,7 @@ Start argument parsing
 
   Usage: $0 [task] [comment]
   .      $0 -r &lt;report name&gt; -d &lt;date&gt;
-  """</span>)
-</pre>
+  """</span>)</pre>
         </td>
       </tr>
     
@@ -240,8 +233,7 @@ Start argument parsing
         <td class="code highlight">
           <pre class="coffeescript">.example(<span class="hljs-string">'$0 t-1212'</span>, <span class="hljs-string">'to log the start on working on ticket 1212'</span>)
 .example(<span class="hljs-string">'$0'</span>, <span class="hljs-string">'to end working on the previous task'</span>)
-.example(<span class="hljs-string">'$0 -r summary -d 2015-03'</span>, <span class="hljs-string">'to get a summary report for the given date'</span>)
-</pre>
+.example(<span class="hljs-string">'$0 -r summary -d 2015-03'</span>, <span class="hljs-string">'to get a summary report for the given date'</span>)</pre>
         </td>
       </tr>
     
@@ -258,8 +250,7 @@ Start argument parsing
 .alias(<span class="hljs-string">'r'</span>, <span class="hljs-string">'report'</span>)
 .describe(<span class="hljs-string">'r'</span>, <span class="hljs-string">'show summary report in given format'</span>)
 .alias(<span class="hljs-string">'d'</span>, <span class="hljs-string">'date'</span>)
-.describe(<span class="hljs-string">'d'</span>, <span class="hljs-string">'select date for list or report using yyyy, yyyy-mm or yyyy-mm-dd'</span>)
-</pre>
+.describe(<span class="hljs-string">'d'</span>, <span class="hljs-string">'select date for list or report using yyyy, yyyy-mm or yyyy-mm-dd'</span>)</pre>
         </td>
       </tr>
     
@@ -276,10 +267,7 @@ Start argument parsing
 .alias(<span class="hljs-string">'h'</span>, <span class="hljs-string">'help'</span>)
 .showHelpOnFail(<span class="hljs-literal">false</span>, <span class="hljs-string">"Specify --help for available options"</span>)
 .strict()
-.argv
-
-
-</pre>
+.argv</pre>
         </td>
       </tr>
     
@@ -294,8 +282,7 @@ Helper
 
         </td>
         <td class="code highlight">
-          <pre class="coffeescript"><span class="hljs-function"><span class="hljs-title">addlog</span> = <span class="hljs-params">(task, desc, cb = -&gt;)</span> -&gt;</span>
-</pre>
+          <pre class="coffeescript"><span class="hljs-function"><span class="hljs-title">addlog</span> = <span class="hljs-params">(task, desc, cb = -&gt;)</span> -&gt;</span></pre>
         </td>
       </tr>
     
@@ -311,8 +298,7 @@ Helper
           <pre class="coffeescript">  <span class="hljs-keyword">if</span> task
     cat = task.split <span class="hljs-regexp">/-/</span>
     task = groups[cat[<span class="hljs-number">0</span>]] ? cat[<span class="hljs-number">0</span>]
-    task += <span class="hljs-string">'-'</span> + cat[<span class="hljs-number">1.</span>.].join <span class="hljs-string">'-'</span> <span class="hljs-keyword">if</span> cat.length &gt; <span class="hljs-number">1</span>
-</pre>
+    task += <span class="hljs-string">'-'</span> + cat[<span class="hljs-number">1.</span>.].join <span class="hljs-string">'-'</span> <span class="hljs-keyword">if</span> cat.length &gt; <span class="hljs-number">1</span></pre>
         </td>
       </tr>
     
@@ -327,8 +313,7 @@ Helper
         <td class="code highlight">
           <pre class="coffeescript">  time = moment()
   dir = path.join __dirname, <span class="hljs-string">'../var/local/data'</span>
-  file = path.join dir, <span class="hljs-string">"<span class="hljs-subst">#{time.format <span class="hljs-string">'YYYY-MM'</span>}</span>.log"</span>
-</pre>
+  file = path.join dir, <span class="hljs-string">"<span class="hljs-subst">#{time.format <span class="hljs-string">'YYYY-MM'</span>}</span>.log"</span></pre>
         </td>
       </tr>
     
@@ -341,8 +326,7 @@ Helper
 
         </td>
         <td class="code highlight">
-          <pre class="coffeescript">  lastlog time, dir, file, <span class="hljs-function">-&gt;</span>
-</pre>
+          <pre class="coffeescript">  lastlog time, dir, file, <span class="hljs-function">-&gt;</span></pre>
         </td>
       </tr>
     
@@ -370,8 +354,7 @@ Helper
   fs.readFile file, <span class="hljs-string">'utf-8'</span>, <span class="hljs-function"><span class="hljs-params">(err, text)</span> -&gt;</span>
     <span class="hljs-keyword">return</span> cb() <span class="hljs-keyword">if</span> err
     lines = text.trim().split <span class="hljs-regexp">/\n/</span>
-    values = lines[lines.length-<span class="hljs-number">1</span>].split <span class="hljs-regexp">/\ /</span>
-</pre>
+    values = lines[lines.length<span class="hljs-number">-1</span>].split <span class="hljs-regexp">/\ /</span></pre>
         </td>
       </tr>
     
@@ -394,8 +377,7 @@ Helper
 <span class="hljs-function">
 <span class="hljs-title">description</span> = <span class="hljs-params">(argv, cb)</span> -&gt;</span>
   <span class="hljs-keyword">if</span> argv.length &gt; <span class="hljs-number">1</span>
-    <span class="hljs-keyword">return</span> cb <span class="hljs-literal">null</span>, argv[<span class="hljs-number">1.</span>.].join <span class="hljs-string">' '</span>
-</pre>
+    <span class="hljs-keyword">return</span> cb <span class="hljs-literal">null</span>, argv[<span class="hljs-number">1.</span>.].join <span class="hljs-string">' '</span></pre>
         </td>
       </tr>
     
@@ -410,18 +392,17 @@ Helper
         <td class="code highlight">
           <pre class="coffeescript">  prompt.start()
   prompt.get
-    <span class="hljs-attribute">properties</span>:
-      <span class="hljs-attribute">detail</span>:
-        <span class="hljs-attribute">message</span>: <span class="hljs-string">"Give some description to log <span class="hljs-subst">#{task}</span>"</span>
-        <span class="hljs-attribute">validator</span>: <span class="hljs-regexp">/.{5,}/</span>,
+    properties:
+      detail:
+        message: <span class="hljs-string">"Give some description to log <span class="hljs-subst">#{task}</span>"</span>
+        validator: <span class="hljs-regexp">/.{5,}/</span>,
   , <span class="hljs-function"><span class="hljs-params">(err, input)</span> -&gt;</span>
     <span class="hljs-keyword">return</span> cb err, input?.detail
 <span class="hljs-function">
 <span class="hljs-title">readlog</span> = <span class="hljs-params">(date, cb)</span> -&gt;</span>
   date ?= moment().format <span class="hljs-string">'YYYY-MM-DD'</span>
   dir = path.join __dirname, <span class="hljs-string">'../var/local/data'</span>
-  log = []
-</pre>
+  log = []</pre>
         </td>
       </tr>
     
@@ -443,10 +424,10 @@ Helper
         <span class="hljs-keyword">if</span> string.starts values[<span class="hljs-number">0</span>], date
           names = values[<span class="hljs-number">1</span>]?.split <span class="hljs-regexp">/-/</span>
           log.push
-            <span class="hljs-attribute">time</span>: values[<span class="hljs-number">0</span>]
-            <span class="hljs-attribute">name</span>: values[<span class="hljs-number">1</span>]
-            <span class="hljs-attribute">group</span>: [names?[<span class="hljs-number">0</span>], names?[<span class="hljs-number">1.</span>.].join <span class="hljs-string">'-'</span>]
-            <span class="hljs-attribute">desc</span>: values[<span class="hljs-number">2.</span>.]?.join <span class="hljs-string">' '</span>
+            time: values[<span class="hljs-number">0</span>]
+            name: values[<span class="hljs-number">1</span>]
+            group: [names?[<span class="hljs-number">0</span>], names?[<span class="hljs-number">1.</span>.].join <span class="hljs-string">'-'</span>]
+            desc: values[<span class="hljs-number">2.</span>.]?.join <span class="hljs-string">' '</span>
       cb <span class="hljs-literal">null</span>, log
   <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> date.length <span class="hljs-keyword">is</span> <span class="hljs-number">7</span>
     file = path.join dir,  <span class="hljs-string">"<span class="hljs-subst">#{date}</span>.log"</span>
@@ -456,10 +437,10 @@ Helper
         values = line.split <span class="hljs-regexp">/\ /</span>
         names = values[<span class="hljs-number">1</span>]?.split <span class="hljs-regexp">/-/</span>
         log.push
-          <span class="hljs-attribute">time</span>: values[<span class="hljs-number">0</span>]
-          <span class="hljs-attribute">name</span>: values[<span class="hljs-number">1</span>]
-          <span class="hljs-attribute">group</span>: [names?[<span class="hljs-number">0</span>], names?[<span class="hljs-number">1.</span>.].join <span class="hljs-string">'-'</span>]
-          <span class="hljs-attribute">desc</span>: values[<span class="hljs-number">2.</span>.]?.join <span class="hljs-string">' '</span>
+          time: values[<span class="hljs-number">0</span>]
+          name: values[<span class="hljs-number">1</span>]
+          group: [names?[<span class="hljs-number">0</span>], names?[<span class="hljs-number">1.</span>.].join <span class="hljs-string">'-'</span>]
+          desc: values[<span class="hljs-number">2.</span>.]?.join <span class="hljs-string">' '</span>
       cb <span class="hljs-literal">null</span>, log
   <span class="hljs-keyword">else</span>
     async.each [<span class="hljs-number">1.</span><span class="hljs-number">.12</span>], <span class="hljs-function"><span class="hljs-params">(month, cb)</span> -&gt;</span>
@@ -470,17 +451,16 @@ Helper
             values = line.split <span class="hljs-regexp">/\ /</span>
             names = values[<span class="hljs-number">1</span>]?.split <span class="hljs-regexp">/-/</span>
             log.push
-              <span class="hljs-attribute">time</span>: values[<span class="hljs-number">0</span>]
-              <span class="hljs-attribute">name</span>: values[<span class="hljs-number">1</span>]
-              <span class="hljs-attribute">group</span>: [names?[<span class="hljs-number">0</span>], names?[<span class="hljs-number">1.</span>.].join <span class="hljs-string">'-'</span>]
-              <span class="hljs-attribute">desc</span>: values[<span class="hljs-number">2.</span>.]?.join <span class="hljs-string">' '</span>
+              time: values[<span class="hljs-number">0</span>]
+              name: values[<span class="hljs-number">1</span>]
+              group: [names?[<span class="hljs-number">0</span>], names?[<span class="hljs-number">1.</span>.].join <span class="hljs-string">'-'</span>]
+              desc: values[<span class="hljs-number">2.</span>.]?.join <span class="hljs-string">' '</span>
         cb()
     , <span class="hljs-function"><span class="hljs-params">(err)</span> -&gt;</span> cb err, log
 <span class="hljs-function">
 <span class="hljs-title">group</span> = <span class="hljs-params">(logs)</span> -&gt;</span>
   data = {}
-  <span class="hljs-keyword">for</span> log <span class="hljs-keyword">in</span> logs
-</pre>
+  <span class="hljs-keyword">for</span> log <span class="hljs-keyword">in</span> logs</pre>
         </td>
       </tr>
     
@@ -499,12 +479,11 @@ Helper
       data[day] ?= {}
       data[day][last.group[<span class="hljs-number">0</span>]] ?= {}
       data[day][last.group[<span class="hljs-number">0</span>]][last.group[<span class="hljs-number">1</span>] ? <span class="hljs-string">'-'</span>] ?=
-        <span class="hljs-attribute">time</span>: <span class="hljs-number">0</span>
-        <span class="hljs-attribute">comment</span>: []
+        time: <span class="hljs-number">0</span>
+        comment: []
       entry = data[day][last.group[<span class="hljs-number">0</span>]][last.group[<span class="hljs-number">1</span>]]
       entry.time += diff
-      entry.comment.push last.desc <span class="hljs-keyword">unless</span> last.desc <span class="hljs-keyword">in</span> entry.comment
-</pre>
+      entry.comment.push last.desc <span class="hljs-keyword">unless</span> last.desc <span class="hljs-keyword">in</span> entry.comment</pre>
         </td>
       </tr>
     
@@ -518,9 +497,7 @@ Helper
         </td>
         <td class="code highlight">
           <pre class="coffeescript">    last = <span class="hljs-keyword">if</span> log.name? <span class="hljs-keyword">then</span> log <span class="hljs-keyword">else</span> <span class="hljs-literal">null</span>
-  data
-
-</pre>
+  data</pre>
         </td>
       </tr>
     
@@ -535,8 +512,7 @@ Different reports
 
         </td>
         <td class="code highlight">
-          <pre class="coffeescript">report =
-</pre>
+          <pre class="coffeescript">report =</pre>
         </td>
       </tr>
     
@@ -552,11 +528,10 @@ list
 
         </td>
         <td class="code highlight">
-          <pre class="coffeescript">  <span class="hljs-attribute">list</span>: <span class="hljs-function"><span class="hljs-params">(logs, cb)</span> -&gt;</span>
+          <pre class="coffeescript">  list: <span class="hljs-function"><span class="hljs-params">(logs, cb)</span> -&gt;</span>
     <span class="hljs-built_in">console</span>.log <span class="hljs-string">'DATE\tSTART\tEND\tMINUTES\tGROUP\tTASK\tCOMMENT'</span>
     last = <span class="hljs-literal">null</span>
-    <span class="hljs-keyword">for</span> log <span class="hljs-keyword">in</span> logs
-</pre>
+    <span class="hljs-keyword">for</span> log <span class="hljs-keyword">in</span> logs</pre>
         </td>
       </tr>
     
@@ -587,8 +562,7 @@ keep for next line</p>
         </td>
         <td class="code highlight">
           <pre class="coffeescript">      last = <span class="hljs-keyword">if</span> log.name? <span class="hljs-keyword">then</span> log <span class="hljs-keyword">else</span> <span class="hljs-literal">null</span>
-    cb()
-</pre>
+    cb()</pre>
         </td>
       </tr>
     
@@ -604,15 +578,13 @@ summary
 
         </td>
         <td class="code highlight">
-          <pre class="coffeescript">  <span class="hljs-attribute">summary</span>: <span class="hljs-function"><span class="hljs-params">(logs, cb)</span> -&gt;</span>
+          <pre class="coffeescript">  summary: <span class="hljs-function"><span class="hljs-params">(logs, cb)</span> -&gt;</span>
     <span class="hljs-built_in">console</span>.log <span class="hljs-string">"DAY\tMINUTES\tGROUP\tTASK"</span>
     <span class="hljs-keyword">for</span> day,data <span class="hljs-keyword">of</span> group logs
       <span class="hljs-keyword">for</span> category <span class="hljs-keyword">of</span> data
         <span class="hljs-keyword">for</span> task,entry <span class="hljs-keyword">of</span> data[category]
           <span class="hljs-built_in">console</span>.log <span class="hljs-string">"<span class="hljs-subst">#{day}</span>\t<span class="hljs-subst">#{entry.time}</span>\t<span class="hljs-subst">#{category}</span>\t<span class="hljs-subst">#{task}</span>"</span>
-    cb()
-
-</pre>
+    cb()</pre>
         </td>
       </tr>
     
@@ -641,9 +613,7 @@ Start the processing
   description argv._, <span class="hljs-function"><span class="hljs-params">(err, desc)</span> -&gt;</span>
     <span class="hljs-keyword">throw</span> err <span class="hljs-keyword">if</span> err
     addlog task, desc, <span class="hljs-function"><span class="hljs-params">(err)</span> -&gt;</span>
-      <span class="hljs-keyword">throw</span> err <span class="hljs-keyword">if</span> err
-
-</pre>
+      <span class="hljs-keyword">throw</span> err <span class="hljs-keyword">if</span> err</pre>
         </td>
       </tr>
     
